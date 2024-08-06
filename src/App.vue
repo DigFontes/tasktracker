@@ -1,9 +1,12 @@
 <template>
-  <main class="columns is-gapless is-multiline">
+  <main
+    class="columns is-gapless is-multiline"
+    :class="{ 'modo-escuro': modoEscuroAtivo }"
+  >
     <div class="column is-one-quarter">
-      <BarraLeteral />
+      <BarraLateral @aoTemaAlterado="trocarTema" />
     </div>
-    <div class="column is-three-quarter">
+    <div class="column is-three-quarter conteudo">
       <Formulario @aoSalvarTarefa="salvarTarefa" />
       <div class="lista">
         <Tarefa
@@ -11,9 +14,7 @@
           :key="index"
           :tarefa="tarefa"
         />
-        <Box v-if="listaEstaVazia">
-          Você ainda não iniciou nenhuma tarefa hoje!
-        </Box>
+        <Box v-if="listaEstaVazia">Nenhema tarefa iniciada hoje!</Box>
       </div>
     </div>
   </main>
@@ -21,16 +22,16 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import BarraLeteral from "./components/BarraLeteral.vue";
+import BarraLateral from "./components/BarraLateral.vue";
 import Formulario from "./components/Formulario.vue";
 import Tarefa from "./components/Tarefa.vue";
-import ITarefa from "./interfaces/ITarefa";
 import Box from "./components/Box.vue";
+import ITarefa from "./interfaces/ITarefa";
 
 export default defineComponent({
   name: "App",
   components: {
-    BarraLeteral,
+    BarraLateral,
     Formulario,
     Tarefa,
     Box,
@@ -38,6 +39,7 @@ export default defineComponent({
   data() {
     return {
       tarefas: [] as ITarefa[],
+      modoEscuroAtivo: false,
     };
   },
   computed: {
@@ -49,6 +51,9 @@ export default defineComponent({
     salvarTarefa(tarefa: ITarefa) {
       this.tarefas.push(tarefa);
     },
+    trocarTema(modoEscuroAtivo: boolean) {
+      this.modoEscuroAtivo = modoEscuroAtivo;
+    },
   },
 });
 </script>
@@ -56,5 +61,16 @@ export default defineComponent({
 <style>
 .lista {
   padding: 1.25rem;
+}
+main {
+  --bg-primario: #ffffff;
+  --texto-primario: #000;
+}
+main.modo-escuro {
+  --bg-primario: #23282b;
+  --texto-primario: #fff;
+}
+.conteudo {
+  background-color: var(--bg-primario);
 }
 </style>
